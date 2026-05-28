@@ -1,0 +1,16 @@
+{
+  "이 파일 건들지 말것. 중요한 것은 아니나 내가 까먹으면 안되는 거임.":true,
+  "data":
+  {
+    "startNode": 0,
+    "destinationNode": 1,
+    "nodes": 
+    [
+      {
+        "pos": {"x" : 0, "y" : 0},
+        "isLandmark": true
+      }
+    ],        
+    "edges": [["index1", "index2", "cost"], ["index1", "index2", "cost"], ["index1", "index2", "cost"], ["index1", "index2", "cost"]]
+  }
+}
