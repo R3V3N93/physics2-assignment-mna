@@ -1,0 +1,16 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ff020982c2b0c6842b0e2c88a4717d94, type: 3}
+  m_Name: PrefabSO
+  m_EditorClassIdentifier: Assembly-CSharp::PrefabSO
+  node: {fileID: 2201548183757296336, guid: 7329175ae914c7a4891283def48df24a, type: 3}
+  edge: {fileID: 7342888762953746477, guid: 55638cabd65dea6469e13671e5b16fd7, type: 3}

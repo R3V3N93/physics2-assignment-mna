@@ -29,7 +29,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -79,7 +79,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: -1086021369
+  m_SortingLayerID: -657205689
   m_SortingLayer: 2
   m_SortingOrder: 0
   m_MaskInteraction: 0
@@ -107,7 +107,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: '::'
   index: -1
   neighbors: []
-  visibleInPathfinding: 0
 --- !u!58 &2960991660199483789
 CircleCollider2D:
   m_ObjectHideFlags: 0

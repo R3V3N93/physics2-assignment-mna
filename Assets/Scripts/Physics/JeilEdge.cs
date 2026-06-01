@@ -1,24 +1,38 @@
+using System;
 using UnityEngine;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine.UIElements;
 
+[Serializable]
+public struct Components
+{
+    public GameObject root;
+    public JeilBattery battery;
+    public JeilResistor resistor;
+}
+
 public class JeilEdge : JeilElement
 {
-    public int cost = 1;
+    public enum ComponentTypeT
+    {
+        Wire,
+        Battery,
+        Resistor
+    };
+    
+    public ComponentTypeT componentType = ComponentTypeT.Wire;
+    public Components components;
+    
     public List<JeilNode> connectedNodes = new List<JeilNode>(); 
-
     [HideInInspector] public LineRenderer line;
-    [HideInInspector] public TMP_InputField input;
     [HideInInspector] public EdgeCollider2D col;
-
     void Awake()
     {
         line = GetComponentInChildren<LineRenderer>();
         line.positionCount = 2;
-        input = GetComponent<TMP_InputField>();
         col =  GetComponent<EdgeCollider2D>();
-        SetCost(1);
+        SetComponent(ComponentTypeT.Wire);
     }
     
     
@@ -42,13 +56,19 @@ public class JeilEdge : JeilElement
             points.Add(connectedNodes[0].transform.position - this.transform.position);
             points.Add(connectedNodes[1].transform.position - this.transform.position); // This is dumb. I need to make 2 separate arrays because their types need to be different?
             col.SetPoints(points);
-        }
-        
-    }
 
-    public void SetCost(int what)
+            float y = this.transform.position.y - connectedNodes[0].transform.position.y;
+            float x = this.transform.position.x - connectedNodes[0].transform.position.x;
+            components.root.transform.eulerAngles = new Vector3(0, 0, Mathf.Atan2(y, x)) * Mathf.Rad2Deg;
+        }
+    }
+    
+    public void SetComponent(ComponentTypeT to)
     {
-        this.cost = what;
-        input.text = this.cost.ToString();
+        Debug.Log("Set Componenet to " + to);
+        componentType = to;
+        
+        components.battery.gameObject.SetActive(to == ComponentTypeT.Battery);
+        components.resistor.gameObject.SetActive(to == ComponentTypeT.Resistor);
     }
 }

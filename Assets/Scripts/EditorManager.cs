@@ -6,6 +6,8 @@ using System.Collections.Generic;
 
 public class EditorManager : MonoBehaviour
 {
+    public JeilNode referenceNode;
+    
     enum StatesT
     {
         Selecting,
@@ -76,8 +78,6 @@ public class EditorManager : MonoBehaviour
         GameManager.obj.pinput.eventDelete     += Delete;
         
         GameManager.obj.pinput.eventCancel     += Cancel;
-        
-        GameManager.obj.state = GameManager.GameState.Editing;
         
         ui.SetActive(true);
     }
@@ -220,10 +220,10 @@ public class EditorManager : MonoBehaviour
 
         if (dragRect.width * dragRect.height < 100)
         {
-            Collider2D raycasted = Physics2D.OverlapPoint(GameManager.MousePosition(), GameManager.obj.layerEdge|GameManager.obj.layerNode);
+            Collider2D raycasted = Physics2D.OverlapPoint(GameManager.MousePosition(), GameManager.obj.layers.edge|GameManager.obj.layers.node);
             if (raycasted != null)
             {
-                if (raycasted.gameObject.layer == GameManager.GetRealLayer(GameManager.obj.layerEdge))
+                if (raycasted.gameObject.layer == GameManager.GetRealLayer(GameManager.obj.layers.edge))
                 {
                     
                 }
@@ -244,10 +244,9 @@ public class EditorManager : MonoBehaviour
 
     public JeilNode CreateNode(Vector2 pos, int index = -1, bool landmark = false)
     {   
-        JeilNode product = Instantiate(GameManager.obj.prefabNode, pos, Quaternion.identity, GameManager.obj.poolNode.transform).GetComponent<JeilNode>();
+        JeilNode product = Instantiate(GameManager.obj.prefabs.node, pos, Quaternion.identity, GameManager.obj.poolNode.transform).GetComponent<JeilNode>();
         if(index != -1 && index >= 0)
             product.index = index;
-        product.visibleInPathfinding = landmark;
         return product;
     }
 
@@ -263,7 +262,7 @@ public class EditorManager : MonoBehaviour
         DestroyImmediate(what.gameObject);
     }
     
-    public void ConnectNodes(JeilNode what1, JeilNode what2, int cost = 1)
+    public void ConnectNodes(JeilNode what1, JeilNode what2)
     {
         Debug.Log("Connecting from what1 to what2 ");
         if(!what1 || !what2)
@@ -275,16 +274,13 @@ public class EditorManager : MonoBehaviour
         what1.neighbors.Add(what2);
         what2.neighbors.Add(what1);
         
-        what1.gameObject.layer = GameManager.GetRealLayer(GameManager.obj.layerNode);
-        what2.gameObject.layer = GameManager.GetRealLayer(GameManager.obj.layerNode);
+        what1.gameObject.layer = GameManager.GetRealLayer(GameManager.obj.layers.node);
+        what2.gameObject.layer = GameManager.GetRealLayer(GameManager.obj.layers.node);
 
-        GameObject _edge = Instantiate(GameManager.obj.prefabEdge, (what1.transform.position + what2.transform.position) / 2, Quaternion.identity, GameManager.obj.poolEdge.transform);
+        GameObject _edge = Instantiate(GameManager.obj.prefabs.edge, (what1.transform.position + what2.transform.position) / 2, Quaternion.identity, GameManager.obj.poolEdge.transform);
 
         JeilEdge edge = _edge.GetComponent<JeilEdge>();
-        edge.SetCost(cost);
         edge.ConnectNodes(what1, what2);
-        what1.neighborEdges[what2] = edge;
-        what2.neighborEdges[what1] = edge;
     }
 
     public void OpenPropertyMenu()
@@ -297,12 +293,10 @@ public class EditorManager : MonoBehaviour
         if(selected is JeilNode)
         {
             menuNode.SetActive(true);
-            menuNodeLandmarkToggle.isOn = ((JeilNode)selected).visibleInPathfinding;
         }
         else if(selected is JeilEdge)
         {
             menuEdge.SetActive(true);
-            menuEdgeCostInput.text = ((JeilEdge)selected).cost.ToString();
         }
     }
 
@@ -313,32 +307,44 @@ public class EditorManager : MonoBehaviour
         menuNode.SetActive(false);
         menuEdge.SetActive(false);
     }
-
-    public void SetToStartNode()
-    {
-        if (selected is not JeilNode) return;
-        if ((JeilNode)selected == GameManager.obj.managerPathfinding.destinationNode) return;
-        GameManager.obj.managerPathfinding.startNode = (JeilNode)selected;
-    }
     
-    public void SetToDestinationNode()
+    public void SetComponent(int to)
     {
-        if (selected is not JeilNode) return;
-        if ((JeilNode)selected == GameManager.obj.managerPathfinding.startNode) return;
-        GameManager.obj.managerPathfinding.destinationNode = (JeilNode)selected;
+        if (selected is JeilEdge)
+        {
+            ((JeilEdge)selected).SetComponent((JeilEdge.ComponentTypeT)to);
+        }
     }
 
-    public void ToggleLandmark(bool toggle)
+    public void SetComponentValue(string to)
     {
-        if (selected is not JeilNode) return;
-        JeilNode sel =  selected as JeilNode;
-        sel.visibleInPathfinding = toggle;
+        if (selected is JeilEdge)
+        {
+            JeilEdge edge = ((JeilEdge)selected);
+            switch (edge.componentType)
+            {
+                case JeilEdge.ComponentTypeT.Battery:
+                    edge.components.battery.deltaVoltage = float.Parse(to);
+                    break;
+                case JeilEdge.ComponentTypeT.Resistor:
+                    edge.components.resistor.resistance.value = float.Parse(to);
+                    break;
+            }
+        }
     }
     
-    public void SetEdgeCost(string to) // Stupid ngl. I just solely want int input.
+    public void RunMNA()
     {
-        if (selected is not JeilEdge) return;
-        JeilEdge sel =  selected as JeilEdge;
-        sel.SetCost(int.Parse(to));
+        Dictionary<JeilEdge, JeilEdge> map = new Dictionary<JeilEdge, JeilEdge>();
+        //List<JeilNode> nodes = GameManager.GetNodes();
+        List<JeilEdge> edges = GameManager.GetEdges();
+
+        foreach (JeilEdge edge in edges)
+        {
+            foreach (JeilNode dot in edge.connectedNodes)
+            {
+                
+            }
+        }
     }
 }

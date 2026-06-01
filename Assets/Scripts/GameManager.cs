@@ -9,16 +9,11 @@ public class GameManager : MonoBehaviour
     public InputSO pinput;
     public Camera playerCamera;
     
-    public enum GameState
-    {
-        PathFinding,
-        Editing
-    };
-    [Header("Program")] 
-    public GameState state = GameState.PathFinding;
 
-    [Header("Prefabs")] public GameObject prefabNode;
-    public GameObject prefabEdge;
+    [Header("SO")] 
+    public PrefabSO prefabs;
+
+    public LayerSO layers;
     
     [Header("Pools")]
     public GameObject poolNode;
@@ -28,52 +23,22 @@ public class GameManager : MonoBehaviour
     [Tooltip("Max amount to scroll in orthographic")]
     [SerializeField] private uint maxScroll = 50;
     [SerializeField] private float panningSpeed = 0.05f;
-    
-    [Header("Layers")]
-    public LayerMask layerNode;
-    public LayerMask layerNodeHeld;
-    public LayerMask layerEdge;
 
     [Header("Managers")] 
     public EditorManager managerEditor;
-    public PathfindingManager managerPathfinding;
 
-    [Header("Debug")] 
-    [SerializeField] private List<GameObject> undoBuffer;
-    public Vector2 mousePositionOld;
-
-    public void ToggleState()
-    {
-        if (state == GameState.PathFinding)
-        {
-            managerEditor.gameObject.SetActive(true);
-            managerPathfinding.gameObject.SetActive(false);
-        }
-        else
-        {
-            managerPathfinding.gameObject.SetActive(true);
-            managerEditor.gameObject.SetActive(false);
-        }
-        Debug.Log("Toggled state");
-    }
-    
     void Awake()
     {
         if(obj == null) obj = this;
         else Destroy(this);
         
-        managerPathfinding.gameObject.SetActive(true);
+        managerEditor.gameObject.SetActive(true);
     }
 
     void Update()
     {
         Scroll();
         Panning();
-
-        if (!pinput.shift)
-        {
-            mousePositionOld = pinput.mousePosition;
-        }
     }
     
     void Scroll()
@@ -110,7 +75,7 @@ public class GameManager : MonoBehaviour
 
     static public JeilElement GetElementOnMouse()
     {
-        Collider2D raycasted = Physics2D.OverlapPoint(MousePosition(), obj.layerNode|obj.layerEdge);
+        Collider2D raycasted = Physics2D.OverlapPoint(MousePosition(), obj.layers.node|obj.layers.edge);
         if (raycasted != null)
         {
             JeilElement element = raycasted.gameObject.GetComponent<JeilElement>();
@@ -149,4 +114,6 @@ public class GameManager : MonoBehaviour
 
         return temp;
     }
+
+    
 }

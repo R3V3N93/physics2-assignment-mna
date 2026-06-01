@@ -1117,19 +1117,19 @@ MonoBehaviour:
   pinput: {fileID: 11400000, guid: 215c4601156b69d42af642b36ecb1b4b, type: 2}
   playerCamera: {fileID: 519420031}
   state: 0
-  prefabNode: {fileID: 2201548183757296336, guid: 7329175ae914c7a4891283def48df24a, type: 3}
-  prefabEdge: {fileID: 7342888762953746477, guid: 55638cabd65dea6469e13671e5b16fd7, type: 3}
+  prefabs.node: {fileID: 2201548183757296336, guid: 7329175ae914c7a4891283def48df24a, type: 3}
+  prefabs.edge: {fileID: 7342888762953746477, guid: 55638cabd65dea6469e13671e5b16fd7, type: 3}
   poolNode: {fileID: 241283229}
   poolEdge: {fileID: 1669626327}
   maxScroll: 50
   panningSpeed: 0.05
-  layerNode:
+  layers.node:
     serializedVersion: 2
     m_Bits: 64
-  layerNodeHeld:
+  layers.nodeHeld:
     serializedVersion: 2
     m_Bits: 128
-  layerEdge:
+  layers.edge:
     serializedVersion: 2
     m_Bits: 256
   managerEditor: {fileID: 410884620}
